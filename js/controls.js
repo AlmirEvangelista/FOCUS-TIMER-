@@ -1,27 +1,44 @@
-export function Controls({
+export default function Controls({
   buttonPlay,
   buttonPause,
   buttonStop,
   buttonSet
 }){
-  function resetControls(){
+  function reset(){
     buttonPlay.classList.remove('hide')
     buttonPause.classList.add('hide')
     buttonStop.classList.add('hide')
     buttonSet.classList.remove('hide')
   }
   
-  function updateControls(){
+  function play(){
     buttonPlay.classList.add('hide');
     buttonPause.classList.remove('hide')
     buttonStop.classList.remove('hide')
     buttonSet.classList.add('hide')
   }
 
-  return {
-    resetControls,
-    updateControls
+  function pause(){
+    buttonPause.classList.add('hide')
+    buttonPlay.classList.remove('hide')
   }
+
+  function getMinutes(){
+    let newMinutes = prompt('how many minutes?')
+
+    if(!newMinutes){
+      return false
+    }
+      return newMinutes
+  }
+
+  return {
+    reset,
+    play,
+    pause,
+    getMinutes
+  }
+
 }
 
 

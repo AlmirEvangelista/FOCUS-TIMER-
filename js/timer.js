@@ -1,56 +1,61 @@
-export function Timer({
-  minutesDisplay,
-  secondsDisplay,
-  timerTimeout,
-  resetControls
-}){
+export default function Timer({ 
+  minutesDisplay, 
+  secondsDisplay,  
+  resetControls,
+}) {
+  let minutes = Number(minutesDisplay.textContent)
+  let timerTimeout
 
-function updateTimerDisplay(minutes, seconds){
-  minutesDisplay.textContent = String(minutes).padStart(2, "0")
-  secondsDisplay.textContent = String(seconds).padStart(2, "0")
-}
+  function updateDisplay(newMinutes, seconds) {
+    newMinutes = newMinutes === undefined ? minutes : newMinutes
+    seconds = seconds === undefined ? 0 : seconds
+    minutesDisplay.textContent = String(newMinutes).padStart(2, "0")
+    secondsDisplay.textContent = String(seconds).padStart(2, "0")
+  }
 
-function resetTimer(){
-  updateTimerDisplay(minutes, 0)
-  clearTimeout(timerTimeout)
-}
+  function reset() {
+    updateDisplay(minutes, 0)
+    clearTimeout(timerTimeout)
+  }
 
+  function pauseTime(){
+    clearTimeout(timerTimeout)
+  }
 
-function countdown(){
-  timerTimeout = setTimeout(function() {
+  function countdown(){
+    timerTimeout = setTimeout(function() {
+      let seconds =  Number(secondsDisplay.textContent)
+      let minutes = Number(minutesDisplay.textContent)
+      let isFinished = minutes <= 0 && seconds <= 0
 
-    let minutes= Number(minutesDisplay.textContent)
-    let seconds = Number(secondsDisplay.textContent)
+      updateDisplay(minutes, 0)
 
-    
-    updateTimerDisplay(minutes, 0)
+      if (isFinished) {
+        resetControls()
+        updateDisplay()
+        return
+      }
 
-    if(minutes <= 0){
+      if( seconds <= 0 ) {
+        seconds = 60
+        --minutes
+      }
 
-      resetControls()
+      updateDisplay(minutes, String(seconds - 1))
 
-      return
-    }
-    
-    
-    if(seconds <= 0){
-      seconds = 2
-      --minutes
-    }
+      countdown()
+    }, 1000)
+  }
 
-    updateTimerDisplay(minutes, String(seconds - 1))
-
-
-    countdown()
-
-  }, 1000)
-
+  function updateMinutes(newMinutes){
+    minutes = newMinutes
   }
 
   return {
     countdown,
-    resetTimer,
-    updateTimerDisplay
+    reset,
+    updateDisplay,
+    pauseTime,
+    updateMinutes
   }
-
 }
